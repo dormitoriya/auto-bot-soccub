@@ -2,10 +2,15 @@ package org.dormitory.autobotsoccub.bot;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.dormitory.autobotsoccub.command.Command;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
+
+import java.util.List;
+
+import static org.dormitory.autobotsoccub.command.result.CommandResultConverter.fromCommandResult;
 
 @Slf4j
 @AllArgsConstructor
@@ -13,12 +18,7 @@ public class SoccubBot extends TelegramLongPollingBot {
 
     private String name;
     private String token;
-
-    @Override
-    public void onUpdateReceived(Update update) {
-        log.debug("Got update: {}", update);
-        reply("HELLO", update);
-    }
+    private List<Command> commands;
 
     @Override
     public String getBotUsername() {
@@ -30,9 +30,19 @@ public class SoccubBot extends TelegramLongPollingBot {
         return token;
     }
 
-    private void reply(String reply, Update toUpdate) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setText(reply).setChatId(String.valueOf(toUpdate.getMessage().getChatId())).enableMarkdown(true);
+    @Override
+    public void onUpdateReceived(Update update) {
+        log.debug("Got update: {}", update);
+
+        commands.stream()
+                .filter(command -> command.accepts(update))
+                .findFirst()
+                .map(command -> command.execute(update))
+                .map(cmdResult -> fromCommandResult(cmdResult, update))
+                .ifPresent(this::tryReply);
+    }
+
+    private void tryReply(SendMessage sendMessage) {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
