@@ -1,15 +1,17 @@
 package org.dormitory.autobotsoccub.command.txtcommand;
 
 import lombok.AllArgsConstructor;
-import org.dormitory.autobotsoccub.command.result.CommandResult;
 import org.dormitory.autobotsoccub.command.TextCommand;
-import org.dormitory.autobotsoccub.command.keyboard.Keyboard;
+import org.dormitory.autobotsoccub.command.keyboard.KeyboardFactory;
+import org.dormitory.autobotsoccub.command.result.CommandResult;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.api.objects.User;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
+
+import static org.dormitory.autobotsoccub.command.keyboard.Button.REGISTER;
 
 @AllArgsConstructor
 public class HelloCommand implements TextCommand {
@@ -18,7 +20,7 @@ public class HelloCommand implements TextCommand {
     private static final String REPLY = "Hello, %s!";
     private static final String UNKNOWN_USER = "anonymous";
 
-    private Keyboard registerKeyboard;
+    private KeyboardFactory keyboardFactory;
 
     @Override
     public Pattern getCommandPattern() {
@@ -29,7 +31,7 @@ public class HelloCommand implements TextCommand {
     public CommandResult execute(Update update) {
         return CommandResult.builder()
                 .replyMessage(replyFromUpdate(update))
-                .keyboardMarkup(registerKeyboard.build())
+                .keyboardMarkup(keyboardFactory.keyboardOf(REGISTER))
                 .build();
     }
 
