@@ -11,7 +11,7 @@ import org.telegram.telegrambots.api.objects.User;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static org.dormitory.autobotsoccub.command.keyboard.Button.REGISTER;
+import static org.dormitory.autobotsoccub.command.keyboard.Button.*;
 
 @AllArgsConstructor
 public class HelloCommand implements TextCommand {
@@ -31,7 +31,7 @@ public class HelloCommand implements TextCommand {
     public CommandResult execute(Update update) {
         return CommandResult.builder()
                 .replyMessage(replyFromUpdate(update))
-                .keyboardMarkup(keyboardFactory.keyboardOf(REGISTER))
+                .keyboardMarkup(keyboardFactory.keyboardOf(REGISTER, UNREGISTER))
                 .build();
     }
 
@@ -47,6 +47,6 @@ public class HelloCommand implements TextCommand {
     }
 
     private String toUserName(User user) {
-        return user.getFirstName() + " " + user.getLastName();
+        return user.getFirstName() + (user.getLastName() != null ? " " + user.getLastName() : "");
     }
 }

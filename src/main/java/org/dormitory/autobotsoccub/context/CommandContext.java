@@ -4,7 +4,10 @@ import org.dormitory.autobotsoccub.command.Command;
 import org.dormitory.autobotsoccub.command.keyboard.KeyboardFactory;
 import org.dormitory.autobotsoccub.command.keyboard.ButtonFactory;
 import org.dormitory.autobotsoccub.command.querycommand.RegisterCommand;
+import org.dormitory.autobotsoccub.command.querycommand.UnregisterCommand;
 import org.dormitory.autobotsoccub.command.txtcommand.HelloCommand;
+import org.dormitory.autobotsoccub.command.txtcommand.ShowPoolCommand;
+import org.dormitory.autobotsoccub.user.UserPool;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,7 +30,17 @@ public class CommandContext {
     }
 
     @Bean
-    public Command registerCommand(KeyboardFactory keyboardFactory) {
-        return new RegisterCommand(keyboardFactory);
+    public Command showPoolCommand() {
+        return new ShowPoolCommand();
+    }
+
+    @Bean
+    public Command registerCommand(KeyboardFactory keyboardFactory, UserPool userPool) {
+        return new RegisterCommand(keyboardFactory, userPool);
+    }
+
+    @Bean
+    public Command unregisterCommand(KeyboardFactory keyboardFactory, UserPool userPool) {
+        return new UnregisterCommand(keyboardFactory, userPool);
     }
 }
