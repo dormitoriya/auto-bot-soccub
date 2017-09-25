@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum Button {
 
     REGISTER("Register", "btn_register"),
-    UNREGISTER("Unregister", "btn_unregister");
+    UNREGISTER("Unregister", "btn_unregister"),
+    START("StartGame", "btn_start");
 
     private String text;
     private String callBackQuery;
