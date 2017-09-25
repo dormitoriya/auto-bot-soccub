@@ -2,8 +2,8 @@ package org.dormitory.autobotsoccub.command.querycommand;
 
 import lombok.AllArgsConstructor;
 import org.dormitory.autobotsoccub.command.InlineQueryCommand;
-import org.dormitory.autobotsoccub.command.keyboard.KeyboardFactory;
 import org.dormitory.autobotsoccub.command.keyboard.Button;
+import org.dormitory.autobotsoccub.command.keyboard.KeyboardFactory;
 import org.dormitory.autobotsoccub.command.result.CommandResult;
 import org.dormitory.autobotsoccub.user.UserPool;
 import org.telegram.telegrambots.api.objects.Update;
@@ -12,7 +12,7 @@ import org.telegram.telegrambots.api.objects.User;
 import static org.dormitory.autobotsoccub.command.keyboard.Button.*;
 
 @AllArgsConstructor
-public class RegisterCommand implements InlineQueryCommand {
+public class UnregisterCommand implements InlineQueryCommand {
 
     private KeyboardFactory keyboardFactory;
 
@@ -20,27 +20,21 @@ public class RegisterCommand implements InlineQueryCommand {
 
     @Override
     public Button getCommandButton() {
-        return Button.REGISTER;
+        return Button.UNREGISTER;
     }
 
     @Override
     public CommandResult execute(Update update) {
         User currentUser = update.getCallbackQuery().getFrom();
-        if(userPool.containsUser(currentUser.getId())) {
+        if (userPool.containsUser(currentUser.getId())) {
+            userPool.removeUser(currentUser);
             return CommandResult.builder()
-                    .replyMessage(currentUser.getFirstName() + " you are already registered!")
-                    .build();
-        }
-        userPool.addUser(currentUser);
-
-        if (userPool.isFull()) {
-            return CommandResult.builder()
-                    .replyMessage(currentUser.getFirstName() + " are registered for upcoming game!\nThe game begins...")
-                    .keyboardMarkup(keyboardFactory.keyboardOf(START))
+                    .replyMessage(currentUser.getFirstName() + ", your registration for the game is canceled! But you can change your mind...")
+                    .keyboardMarkup(keyboardFactory.keyboardOf(REGISTER))
                     .build();
         }
         return CommandResult.builder()
-                .replyMessage(currentUser.getFirstName() + " are registered for upcoming game!")
-                .build();
+            .replyMessage(currentUser.getFirstName() + ", you can not cancel registration for the game, since you are not registered!")
+            .build();
     }
 }
