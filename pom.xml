@@ -35,6 +35,7 @@
 		<cglib.version>3.2.2</cglib.version>
 		<objenesis.version>2.5.1</objenesis.version>
 		<bytebuddy.version>1.6.5</bytebuddy.version>
+		<equalsverifier.version>2.3.3</equalsverifier.version>
 
 		<!-- Plugins -->
 		<groovy-eclipse-batch.version>2.4.3-01</groovy-eclipse-batch.version>
@@ -99,6 +100,12 @@
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-core</artifactId>
 			<version>${hamcrest.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>nl.jqno.equalsverifier</groupId>
+			<artifactId>equalsverifier</artifactId>
+			<version>${equalsverifier.version}</version>
 			<scope>test</scope>
 		</dependency>
 
