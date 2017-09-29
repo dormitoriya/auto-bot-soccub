@@ -15,7 +15,7 @@ class ButtonFactoryShould extends Specification {
 
         expect:
         buttonTypes.each { buttonType ->
-            that sut.create(buttonType), matchesButtonRepresentationOf(buttonType)
+            assert that(sut.create(buttonType), matchesButtonRepresentationOf(buttonType))
         }
     }
 }
