@@ -7,6 +7,8 @@ import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboar
 public class ButtonFactory {
 
     public InlineKeyboardButton create(Button button) {
-        return new InlineKeyboardButton().setText(button.getText()).setCallbackData(button.getCallBackQuery());
+        return new InlineKeyboardButton()
+                .setText(button.getText())
+                .setCallbackData(button.getCallBackQuery());
     }
 }

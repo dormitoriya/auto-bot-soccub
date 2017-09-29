@@ -5,6 +5,8 @@ import org.telegram.telegrambots.api.objects.User;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.StringUtils.defaultString;
+
 public class UserUtils {
 
     private UserUtils() {}
@@ -17,6 +19,6 @@ public class UserUtils {
     }
 
     public static String getUserName(User user) {
-        return user.getFirstName() + (user.getLastName() != null ? " " + user.getLastName() : "") + "\n";
+        return String.format("%s %s%n", user.getFirstName(), defaultString(user.getLastName()));
     }
 }

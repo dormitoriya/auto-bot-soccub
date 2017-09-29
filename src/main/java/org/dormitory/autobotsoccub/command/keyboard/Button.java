@@ -2,6 +2,7 @@ package org.dormitory.autobotsoccub.command.keyboard;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.dormitory.autobotsoccub.exception.UnknownButtonException;
 
 import java.util.Arrays;
 
@@ -18,8 +19,12 @@ public enum Button {
 
     public static Button of(String text, String callBackQuery) {
         return Arrays.stream(values())
-                .filter(btn -> btn.text.equals(text) && btn.callBackQuery.equals(callBackQuery) )
+                .filter(btn -> buttonDataContains(btn, text, callBackQuery))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No enum constant for specified values found"));
+                .orElseThrow(() -> new UnknownButtonException(text, callBackQuery));
+    }
+
+    private static boolean buttonDataContains(Button btn, String text, String callBackQuery) {
+        return btn.text.equals(text) && btn.callBackQuery.equals(callBackQuery);
     }
 }

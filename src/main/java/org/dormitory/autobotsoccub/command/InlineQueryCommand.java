@@ -15,7 +15,11 @@ public interface InlineQueryCommand extends Command {
     default boolean accepts(Update update) {
         return Optional.ofNullable(update.getCallbackQuery())
                 .map(CallbackQuery::getData)
-                .map(queryData -> StringUtils.equals(queryData, getCommandButton().getCallBackQuery()))
+                .map(this::acceptsCallbackQuery)
                 .orElse(false);
+    }
+
+    default Boolean acceptsCallbackQuery(String queryData) {
+        return StringUtils.equals(queryData, getCommandButton().getCallBackQuery());
     }
 }
