@@ -11,7 +11,10 @@ import org.telegram.telegrambots.api.objects.Update;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static org.dormitory.autobotsoccub.command.keyboard.Button.*;
+
+import static org.dormitory.autobotsoccub.command.keyboard.Button.REGISTER;
+import static org.dormitory.autobotsoccub.command.keyboard.Button.UNREGISTER;
+
 
 @AllArgsConstructor
 public class HelloCommand implements TextCommand {
