@@ -11,7 +11,10 @@ import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import java.util.regex.Pattern;
 
-import static org.dormitory.autobotsoccub.command.keyboard.Button.*;
+
+import static org.dormitory.autobotsoccub.command.keyboard.Button.REGISTER;
+import static org.dormitory.autobotsoccub.command.keyboard.Button.START;
+
 
 @AllArgsConstructor
 public class ShowPoolCommand implements TextCommand {
