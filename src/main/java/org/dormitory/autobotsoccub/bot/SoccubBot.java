@@ -2,19 +2,25 @@ package org.dormitory.autobotsoccub.bot;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.dormitory.autobotsoccub.command.Command;
+import org.dormitory.autobotsoccub.user.RegisterMessagesPool;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.util.List;
 
-import static org.dormitory.autobotsoccub.command.result.CommandResultConverter.fromCommandResult;
+import static org.dormitory.autobotsoccub.command.result.CommandResultConverter.*;
 
 @Slf4j
 @AllArgsConstructor
 public class SoccubBot extends TelegramLongPollingBot {
+
+    private static final String TELEGRAM_API_EXCEPTION_MESSAGE = "An error occurred while sending response";
 
     private String name;
     private String token;
@@ -38,15 +44,46 @@ public class SoccubBot extends TelegramLongPollingBot {
                 .filter(command -> command.accepts(update))
                 .findFirst()
                 .map(command -> command.execute(update))
-                .map(cmdResult -> fromCommandResult(cmdResult, update))
-                .ifPresent(this::tryReply);
+                .map(cmdResult -> buildMessage(cmdResult, update))
+                .ifPresent(cmdResult -> tryReply(cmdResult, update));
     }
 
-    private void tryReply(SendMessage sendMessage) {
-        try {
-            execute(sendMessage);
-        } catch (TelegramApiException e) {
-            log.error("An error occurred while sending response", e);
+    private void tryReply(SendMessage sendMessage, Update update) {
+        if (RegisterMessagesPool.isNotNull()) {
+            tryDelete(buildMessage(RegisterMessagesPool.getMessageId(), update));
         }
+        trySend(sendMessage);
+        sendAndSaveStickyMessage(update);
+    }
+
+    private Message trySend(SendMessage message) {
+        try {
+            return execute(message);
+        } catch (TelegramApiException e) {
+            log.error(TELEGRAM_API_EXCEPTION_MESSAGE, e);
+        }
+        return null;
+    }
+
+    private void tryDelete(DeleteMessage message) {
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            log.error(TELEGRAM_API_EXCEPTION_MESSAGE, e);
+        }
+    }
+
+    private void sendAndSaveStickyMessage(Update update) {
+        Message message = trySend(generateStickyMessage(update));
+        RegisterMessagesPool.setMessageId(message != null ? message.getMessageId() : null);
+    }
+
+    private SendMessage generateStickyMessage(Update update) {
+        return commands.stream()
+                .filter(command -> StringUtils.equals(command.getClass().getSimpleName(), "StickyMessageCommand"))
+                .findFirst()
+                .map(command -> command.execute(update))
+                .map(cmdResult -> buildMessage(cmdResult, update))
+                .orElse(null);
     }
 }
