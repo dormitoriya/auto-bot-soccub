@@ -2,7 +2,7 @@ package org.dormitory.autobotsoccub.command.keyboard
 
 import spock.lang.Specification
 
-import static org.dormitory.autobotsoccub.TelegramMatchers.matchesButtonRepresentationOf
+import static org.dormitory.autobotsoccub.util.ControlMatchers.matchesButtonRepresentationOf
 import static spock.util.matcher.HamcrestSupport.that
 
 class ButtonFactoryShould extends Specification {
