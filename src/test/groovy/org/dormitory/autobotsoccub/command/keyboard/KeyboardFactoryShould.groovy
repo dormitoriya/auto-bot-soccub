@@ -1,9 +1,9 @@
 package org.dormitory.autobotsoccub.command.keyboard
 
-import org.dormitory.autobotsoccub.TestDataProvider
+import org.dormitory.autobotsoccub.util.TestDataProvider
 import spock.lang.Specification
 
-import static org.dormitory.autobotsoccub.TelegramMatchers.matchesKeyboardRepresentationOf
+import static org.dormitory.autobotsoccub.util.ControlMatchers.matchesKeyboardRepresentationOf
 import static org.dormitory.autobotsoccub.command.keyboard.Button.REGISTER
 import static org.dormitory.autobotsoccub.command.keyboard.Button.UNREGISTER
 import static spock.util.matcher.HamcrestSupport.that
