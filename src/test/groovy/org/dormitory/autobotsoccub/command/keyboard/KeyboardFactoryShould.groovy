@@ -22,7 +22,7 @@ class KeyboardFactoryShould extends Specification {
 
     def "build keyboard with specified buttons in one line"() {
         given:
-        def createdKeyboard = sut.keyboardOf(REGISTER, UNREGISTER)
+        def createdKeyboard = sut.inlineKeyboardOf(REGISTER, UNREGISTER)
         def expectedKeyboard = [buttons]
 
         expect:

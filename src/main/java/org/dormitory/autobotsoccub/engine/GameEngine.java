@@ -1,14 +1,18 @@
 package org.dormitory.autobotsoccub.engine;
 
+import com.google.common.collect.ImmutableMap;
+import lombok.SneakyThrows;
 import org.dormitory.autobotsoccub.engine.exception.GameDoesNotExistException;
 import org.dormitory.autobotsoccub.engine.model.Game;
 import org.dormitory.autobotsoccub.engine.model.GameData;
 import org.dormitory.autobotsoccub.engine.model.MatchTeam;
 import org.dormitory.autobotsoccub.engine.scores.ScoreTable;
+import org.dormitory.autobotsoccub.engine.scores.ScoreTableRecord;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GameEngine implements GameEngineOperations {
 
@@ -69,7 +73,17 @@ public class GameEngine implements GameEngineOperations {
         scoreTable.decrementScore(userId);
     }
 
-    private GameData findGameDataOrFail(Integer userId) {
+    @Override
+    public GameData getCurrentGameData(Integer userId) {
+        return findGameDataOrFail(userId);
+    }
+
+    @Override
+    public Map<Integer, ScoreTableRecord> getCurrentGameState(Integer userId) {
+        return findGameDataOrFail(userId).getScoreTable().getStatsByUserId();
+    }
+
+    private synchronized GameData findGameDataOrFail(Integer userId) {
         return Optional.ofNullable(activeGames.get(userId))
                 .orElseThrow(() -> new GameDoesNotExistException(userId));
     }

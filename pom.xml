@@ -24,7 +24,7 @@
 		<java.version>1.8</java.version>
 
 		<!-- APIs -->
-		<telegram.bots.version>3.3</telegram.bots.version>
+		<telegram.bots.version>3.5</telegram.bots.version>
 
         <!-- Common -->
         <apache.commons.version>3.6</apache.commons.version>

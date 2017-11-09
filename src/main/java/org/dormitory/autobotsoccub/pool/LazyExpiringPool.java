@@ -44,7 +44,18 @@ public class LazyExpiringPool<K, V> implements ExpiringPool<K, V> {
             clearIfExpiredAndNotEmpty();
             internalPut(key, value);
             PoolView<K, V> result = internalGet();
-            clearIfFull();
+//            clearIfFull();
+            return result;
+        });
+    }
+
+    @Override
+    public PoolView<K, V> putIfAbsent(K key, V value) {
+        return locker.callWithWriteLock(() -> {
+            clearIfExpiredAndNotEmpty();
+            internalPutIfAbsent(key, value);
+            PoolView<K, V> result = internalGet();
+//            clearIfFull();
             return result;
         });
     }
@@ -73,6 +84,13 @@ public class LazyExpiringPool<K, V> implements ExpiringPool<K, V> {
     private void internalPut(K key, V value) {
         container.put(key, value);
         lastModification = now();
+    }
+
+    private void internalPutIfAbsent(K key, V value) {
+        if (!container.containsKey(key)) {
+            container.put(key, value);
+            lastModification = now();
+        }
     }
 
     private PoolView<K, V> internalGet() {

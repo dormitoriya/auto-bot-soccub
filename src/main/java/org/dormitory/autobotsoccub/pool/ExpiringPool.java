@@ -6,5 +6,7 @@ public interface ExpiringPool<K, V> {
 
     PoolView<K, V> put(K key, V value);
 
+    PoolView<K, V> putIfAbsent(K key, V value);
+
     PoolView<K, V> remove(K key);
 }

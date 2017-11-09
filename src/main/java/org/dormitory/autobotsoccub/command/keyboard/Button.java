@@ -12,7 +12,12 @@ public enum Button {
 
     REGISTER("Register", "btn_register"),
     UNREGISTER("Unregister", "btn_unregister"),
-    START("StartGame", "btn_start");
+    START("StartGame", "btn_start"),
+    STOP("StopGame", "btn_stop"),
+    GOAL("Goal", "btn_goal"),
+    AUTO_GOAL("Auto Goal", "btn_auto_goal"),
+    SUBSTITUTION("Substitution", "btn_substitution"),
+    REVERT("Revert", "btn_revert");
 
     private String text;
     private String callBackQuery;

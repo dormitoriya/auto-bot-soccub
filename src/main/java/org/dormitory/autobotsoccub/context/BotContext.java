@@ -2,8 +2,9 @@ package org.dormitory.autobotsoccub.context;
 
 import org.dormitory.autobotsoccub.bot.SoccubBot;
 import org.dormitory.autobotsoccub.command.Command;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.dormitory.autobotsoccub.sender.MessageSender;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,11 +19,13 @@ public class BotContext {
     @Value("${bot.token}")
     private String token;
 
-    @Autowired
-    private List<Command> commands;
+    @Bean
+    public SoccubBot soccubBot(List<Command> commands) {
+        return new SoccubBot(name, token, commands);
+    }
 
     @Bean
-    public SoccubBot soccubBot() {
-        return new SoccubBot(name, token, commands);
+    public MessageSender messageSender(ConfigurableApplicationContext ctx) {
+        return new MessageSender(ctx);
     }
 }

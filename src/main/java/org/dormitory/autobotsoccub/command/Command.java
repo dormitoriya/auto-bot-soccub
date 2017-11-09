@@ -1,11 +1,10 @@
 package org.dormitory.autobotsoccub.command;
 
-import org.dormitory.autobotsoccub.command.result.CommandResult;
-import org.telegram.telegrambots.api.objects.Update;
+import com.google.common.eventbus.Subscribe;
+import org.dormitory.autobotsoccub.bot.chat.ChatData;
 
 public interface Command {
 
-    boolean accepts(Update update);
-
-    CommandResult execute(Update update);
+    @Subscribe
+    void execute(ChatData chatData);
 }

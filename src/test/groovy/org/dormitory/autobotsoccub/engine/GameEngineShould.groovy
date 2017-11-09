@@ -81,7 +81,7 @@ class GameEngineShould extends Specification {
         sut.score(scoreAuthor)
 
         then:
-        with(sut.getCurrentStats(scoreAuthor)) {
+        with(sut.getCurrentGameState(scoreAuthor)) {
             scored.get() == 1
         }
 
@@ -113,7 +113,7 @@ class GameEngineShould extends Specification {
         sut.autoScore(scoreAuthor)
 
         then:
-        with(sut.getCurrentStats(scoreAuthor)) {
+        with(sut.getCurrentGameState(scoreAuthor)) {
             autoScored.get() == 1
         }
 
@@ -142,11 +142,11 @@ class GameEngineShould extends Specification {
         sut.startGame(FW_A, game)
 
         when:
-        def anotherPosition = anotherPosition(sut.getCurrentStats(scoreAuthor).position)
+        def anotherPosition = anotherPosition(sut.getCurrentGameState(scoreAuthor).position)
         sut.changePositionsInTeam(scoreAuthor)
 
         then:
-        with(sut.getCurrentStats(scoreAuthor)) {
+        with(sut.getCurrentGameState(scoreAuthor)) {
             position == anotherPosition
         }
 
@@ -179,7 +179,7 @@ class GameEngineShould extends Specification {
         sut.revert(scoreAuthor)
 
         then:
-        with(sut.getCurrentStats(scoreAuthor)) {
+        with(sut.getCurrentGameState(scoreAuthor)) {
             scored.get() == 0
             autoScored.get() == 0
             missed.get() == 0
@@ -203,7 +203,7 @@ class GameEngineShould extends Specification {
         sut.revert(scoreAuthor)
 
         then:
-        with(sut.getCurrentStats(scoreAuthor)) {
+        with(sut.getCurrentGameState(scoreAuthor)) {
             scored.get() == 0
             autoScored.get() == 0
             missed.get() == 0
@@ -226,7 +226,7 @@ class GameEngineShould extends Specification {
         sut.revert(scoreAuthor)
 
         then:
-        with(sut.getCurrentStats(scoreAuthor)) {
+        with(sut.getCurrentGameState(scoreAuthor)) {
             scored.get() == 0
             autoScored.get() == 0
             missed.get() == 0

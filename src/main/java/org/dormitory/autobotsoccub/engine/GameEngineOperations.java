@@ -3,6 +3,10 @@ package org.dormitory.autobotsoccub.engine;
 import org.dormitory.autobotsoccub.engine.model.Game;
 import org.dormitory.autobotsoccub.engine.model.GameData;
 import org.dormitory.autobotsoccub.engine.model.MatchTeam;
+import org.dormitory.autobotsoccub.engine.scores.ScoreTableRecord;
+import org.telegram.telegrambots.api.objects.User;
+
+import java.util.Map;
 
 public interface GameEngineOperations {
 
@@ -17,4 +21,8 @@ public interface GameEngineOperations {
     MatchTeam changePositionsInTeam(Integer userId);
 
     void revert(Integer userId);
+
+    Map<Integer, ScoreTableRecord> getCurrentGameState(Integer userId);
+
+    GameData getCurrentGameData(Integer userId);
 }

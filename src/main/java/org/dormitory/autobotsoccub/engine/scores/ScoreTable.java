@@ -19,10 +19,15 @@ import static org.dormitory.autobotsoccub.engine.scores.Scores.AUTO_SCORED;
 public class ScoreTable {
 
     @Getter private final ConcurrentHashMap<Integer, ScoreTableRecord> statsByUserId;
+    @Getter private final ConcurrentHashMap<MatchTeam, Integer> gameScore;
     private final ConcurrentHashMap<Integer, Scores> lastScore;
 
     public static ScoreTable fromGame(Game currentGame) {
         ConcurrentHashMap<Integer, ScoreTableRecord> statsBuilder = new ConcurrentHashMap<>();
+        ConcurrentHashMap<MatchTeam, Integer> gameScore = new ConcurrentHashMap<>();
+
+        gameScore.put(MatchTeam.A, 0);
+        gameScore.put(MatchTeam.B, 0);
 
         currentGame.getPlayersByTeams().entrySet().stream()
                 .map(userKeyTeamValue -> ScoreTableRecord.builder()
@@ -35,18 +40,22 @@ public class ScoreTable {
                         .build())
                 .forEach(stats -> statsBuilder.put(stats.getUserId(), stats));
 
-        return new ScoreTable(statsBuilder, new ConcurrentHashMap<>());
+        return new ScoreTable(statsBuilder, gameScore, new ConcurrentHashMap<>());
     }
 
     public void incrementScored(int userId) {
         ScoreTableRecord userStats = statsByUserId.get(userId);
         userStats.getScored().incrementAndGet();
+        MatchTeam team = userStats.getTeam();
+        gameScore.put(team, gameScore.get(team) + 1);
         lastScore.put(userId, SCORED);
     }
 
     public void incrementAutoScored(int userId) {
         ScoreTableRecord userStats = statsByUserId.get(userId);
         userStats.getAutoScored().incrementAndGet();
+        MatchTeam team = MatchTeam.anotherTeam(userStats.getTeam());
+        gameScore.put(team, gameScore.get(team) + 1);
         lastScore.put(userId, AUTO_SCORED);
     }
 
@@ -96,12 +105,16 @@ public class ScoreTable {
     private void decrementScored(int userId) {
         ScoreTableRecord userStats = statsByUserId.get(userId);
         userStats.getScored().decrementAndGet();
+        MatchTeam team = userStats.getTeam();
+        gameScore.put(team, gameScore.get(team) - 1);
         lastScore.remove(userId);
     }
 
     private void decrementAutoScored(int userId) {
         ScoreTableRecord userStats = statsByUserId.get(userId);
         userStats.getAutoScored().decrementAndGet();
+        MatchTeam team = MatchTeam.anotherTeam(userStats.getTeam());
+        gameScore.put(team, gameScore.get(team) + 1);
         lastScore.remove(userId);
     }
 
